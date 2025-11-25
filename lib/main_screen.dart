@@ -7,7 +7,6 @@ KAPAN FILE INI DIEDIT?
 
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-import 'favorite_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -21,7 +20,6 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     const HomeScreen(),
-    const FavoriteScreen(),
   ];
 
   void _onItemTapped(int index) {

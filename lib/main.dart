@@ -1,22 +1,14 @@
-/* =============================================================================
-[PANDUAN STRATEGI UJIAN]
-KAPAN FILE INI DIEDIT?
-1. Untuk mengganti Judul Aplikasi (Title).
-2. Untuk mengganti Warna Tema Utama (Primary Swatch).
-=============================================================================
-*/
-
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'amiibo_model.dart';
-import 'main_screen.dart';
+import 'login_screen.dart';
+import 'home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Setup Hive (Local Database) [cite: 41]
   await Hive.initFlutter();
-  Hive.registerAdapter(AmiiboModelAdapter());
-  await Hive.openBox<AmiiboModel>('favoritesBox');
+  await Hive.openBox('sessionBox'); // Box untuk menyimpan status Login
 
   runApp(const MyApp());
 }
@@ -26,16 +18,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Cek Status Login
+    var sessionBox = Hive.box('sessionBox');
+    bool isLoggedIn = sessionBox.get('isLoggedIn') ?? false;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // [UBAH DISINI]: Judul Aplikasi
-      title: 'Responsi Amiibo App',
+      title: 'Responsi Meal App',
       theme: ThemeData(
         useMaterial3: true,
-        // [UBAH DISINI]: Warna Tema (Colors.red, Colors.green, dll)
-        primarySwatch: Colors.blue,
+        // Tema warna Orange sesuai gambar soal
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.orange,
+          foregroundColor: Colors.white,
+          centerTitle: true,
+        ),
       ),
-      home: const MainScreen(),
+      // Jika sudah login -> Home, Jika belum -> Login [cite: 40]
+      home: isLoggedIn ? const HomeScreen() : const LoginScreen(),
     );
   }
 }
